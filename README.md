@@ -37,7 +37,7 @@ Configuration parameters:
 
 ### `j3_diskio`
 
-Display the current network transfer rate.
+Display the current disk transfer rate.
 
 Configuration parameters:
 - `cache_timeout` : seconds between rate checks (default: 1)
