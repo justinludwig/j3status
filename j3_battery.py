@@ -51,9 +51,9 @@ class Py3status:
         text = self.format.format(capacity=capacity, icon=icon)
 
         color = i3s_config['color_good']
-        if color < self.capacity_degraded:
+        if capacity < self.capacity_degraded:
             color = i3s_config['color_degraded']
-        elif color < self.capacity_bad:
+        elif capacity < self.capacity_bad:
             color = i3s_config['color_bad']
 
         return {
