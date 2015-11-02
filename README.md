@@ -137,9 +137,19 @@ Configuration parameters:
 
 ### `j3_weather`
 
-Display current conditions from [openweathermap.org](http://openweathermap.org).
+Display current conditions from [openweathermap.org](http://openweathermap.org/).
+
+As of 2015-10-09, you need to signup for a free API key via
+the [openweathermap.org Sign Up](http://openweathermap.org/register) page.
+Once you signup, use the API key generated at signup to either:
+1. set the `apikey` parameter directly
+2. place the API key (and nothing else) as a single line in
+   `~/.config/i3status/openweathermap-apikey`
+3. same as 2), but at any file location configured via the `apikey_file` parameter
 
 Configuration parameters:
+- `apikey` : openweathermap.org api key (default: empty)
+- `apikey_file` : path to file containing api key (default: ~/.config/i3status/openweathermap-apikey)
 - `cache_timeout` : seconds between requests for weather updates (default: 1800)
 - `direction_precision` : wind direction precision (default: 2)
     - 1 : N E S W

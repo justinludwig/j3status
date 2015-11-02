@@ -2,7 +2,17 @@
 """
 Display current conditions from openweathermap.org.
 
+As of 2015-10-09, you need to signup for a free API key via
+    http://openweathermap.org/register
+Once you signup, use the API key generated at signup to either:
+1. set the `apikey` parameter directly
+2. place the API key (and nothing else) as a single line in
+   ~/.config/i3status/openweathermap-apikey
+3. same as 2), but at any file location configured via the `apikey_file` parameter
+
 Configuration parameters:
+    - apikey : openweathermap.org api key (default: empty)
+    - apikey_file : path to file containing api key (default: ~/.config/i3status/openweathermap-apikey)
     - cache_timeout : seconds between requests for weather updates (default: 1800)
     - direction_precision : wind direction precision (default: 2)
         - 1 : N E S W
@@ -37,6 +47,7 @@ Configuration parameters:
 
 from datetime import datetime
 from dateutil import tz
+from os.path import expanduser
 from time import time
 import json
 import requests
@@ -49,6 +60,11 @@ DIRECTIONS = {
 
 class Py3status:
     # available configuration parameters
+
+    # literal api key
+    apikey = ''
+    # or path to file containing api key
+    apikey_file = '~/.config/i3status/openweathermap-apikey'
 
     # check for updates every 1800 seconds (30 minutes)
     cache_timeout = 1800
@@ -80,20 +96,25 @@ class Py3status:
 
     test_data = ''#'/home/justin/able/weather.json'
 
+    def _load_apikey(self):
+        with open(expanduser(self.apikey_file)) as f:
+            return f.readline().rstrip()
+
     def _get_weather(self):
         if self.test_data != '':
             with open(self.test_data) as f:
                 return json.load(f)
 
+        apikey = self.apikey or self._load_apikey()
         url = (
             'http://api.openweathermap.org/data/2.5/weather' +
-            '?q={location}&units={units}'
-        ).format(location=self.location, units=self.units)
+            '?q={location}&units={units}&APPID={apikey}'
+        ).format(location=self.location, units=self.units, apikey=apikey)
         response = requests.get(url, timeout=self.request_timeout)
 
         if response.status_code != 200:
             raise Exception('{status} error getting weather for {location}'.format(
-                status=status, location=location))
+                status=response.status_code, location=self.location))
 
         return response.json()
 
