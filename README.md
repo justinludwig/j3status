@@ -147,6 +147,8 @@ Once you signup, use the API key generated at signup to either:
    `~/.config/i3status/openweathermap-apikey`
 3. same as 2), but at any file location configured via the `apikey_file` parameter
 
+Requires the `python-dateutil` and `requests` packages (which you can install via `pip`, like `pip install python-dateutil requests`).
+
 Configuration parameters:
 - `apikey` : openweathermap.org api key (default: empty)
 - `apikey_file` : path to file containing api key (default: ~/.config/i3status/openweathermap-apikey)
