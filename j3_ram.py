@@ -38,8 +38,14 @@ class Py3status:
         mem_index = result.index('Mem:')
         stats['ram'] = { 'total': int(result[mem_index + 1]) }
 
-        cache_index = result.index('buffers/cache:')
-        stats['ram']['used'] = int(result[cache_index + 1])
+        # use new 'available' column (free 3.3.10+)
+        if result.index('available') != -1:
+            available = int(result[mem_index + 6])
+            stats['ram']['used'] = stats['ram']['total'] - available
+        # use old '-/+ buffers/cache' row
+        else:
+            cache_index = result.index('buffers/cache:')
+            stats['ram']['used'] = int(result[cache_index + 1])
 
         swap_index = result.index('Swap:')
         stats['swap'] = {
