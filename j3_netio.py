@@ -28,7 +28,7 @@ Configuration parameters:
     - mode : display mode (default: 'max')
         - 'max' to display just the most-active interface
         - 'all' to display all interfaces
-    - separator : separator to use when displaying multiple interfaces (default: '|')
+    - separation : separator to use when displaying multiple interfaces (default: '|')
     - rate_format : formatting of rate number (default: '{value:4.0f}{units}'
         - used by '{max}', '{total}', '{up}', and {'down'} totals in format parameter
         - uses units defined by rate_b/kb/mb/gb/tb parameters
@@ -63,7 +63,7 @@ class Py3status:
     interface_labels = ''
     #interface_labels = 'E W'
     mode = 'max'
-    separator = '|'
+    separation = '|'
     rate_format = '{value:4.0f}{units}'
     #rate_format = '{value:.0f}{units}'
     rate_b  = ' B/s'
@@ -154,19 +154,19 @@ class Py3status:
                 if max_direction == 'tx': max_icon = self.direction_up
                 if max_direction == 'rx': max_icon = self.direction_down
 
-                text.append(self.format.format(
-                    interface=interface_labels.get(interface) or interface,
-                    max=self._format_bytes(max_value),
-                    direction=max_icon,
-                    up=self._format_bytes(di['tx']),
-                    down=self._format_bytes(di['rx']),
-                    total=self._format_bytes(di['total'])
-                ))
+                text.append(self.py3.safe_format(self.format, {
+                    'interface': interface_labels.get(interface) or interface,
+                    'max': self._format_bytes(max_value),
+                    'direction': max_icon,
+                    'up': self._format_bytes(di['tx']),
+                    'down': self._format_bytes(di['rx']),
+                    'total': self._format_bytes(di['total']),
+                }))
             # show idle text for inactive interface
             elif self.format_idle:
-                text.append(self.format_idle.format(
-                    interface=interface_labels.get(interface) or interface
-                ))
+                text.append(self.py3.safe_format(self.format_idle, {
+                    'interface': interface_labels.get(interface) or interface,
+                }))
 
         # colorize output based on rate of most-active interface
         color = None
@@ -182,7 +182,7 @@ class Py3status:
             'cached_until': now + self.cache_timeout,
             'color': color,
             # show idle text if no active interfaces
-            'full_text': self.separator.join(text) or self.format_all_idle,
+            'full_text': self.py3.composite_join(self.separation, text) or self.format_all_idle,
         }
 
 if __name__ == "__main__":

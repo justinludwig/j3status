@@ -28,7 +28,7 @@ Configuration parameters:
     - mode : display mode (default: 'max')
         - 'max' to display just the most-active device
         - 'all' to display all devices
-    - separator : separator to use when displaying multiple devices (default: '|')
+    - separation : separator to use when displaying multiple devices (default: '|')
     - rate_format : formatting of rate number (default: '{value:4.0f}{units}'
         - used by '{max}', '{total}', '{read}', and {'write'} totals in format parameter
         - uses units defined by rate_b/kb/mb/gb/tb parameters
@@ -63,7 +63,7 @@ class Py3status:
     device_labels = ''
     #device_labels = 'a b'
     mode = 'max'
-    separator = '|'
+    separation = '|'
     rate_format = '{value:4.0f}{units}'
     #rate_format = '{value:.0f}{units}'
     rate_b  = ' B/s'
@@ -156,19 +156,19 @@ class Py3status:
                 if max_direction == 'read': max_icon = self.indicator_read
                 if max_direction == 'write': max_icon = self.indicator_write
 
-                text.append(self.format.format(
-                    device=device_labels.get(device) or device,
-                    max=self._format_bytes(max_value),
-                    direction=max_icon,
-                    read=self._format_bytes(di['read']),
-                    write=self._format_bytes(di['write']),
-                    total=self._format_bytes(di['total'])
-                ))
+                text.append(self.py3.safe_format(self.format, {
+                    'device': device_labels.get(device) or device,
+                    'max': self._format_bytes(max_value),
+                    'direction': max_icon,
+                    'read': self._format_bytes(di['read']),
+                    'write': self._format_bytes(di['write']),
+                    'total': self._format_bytes(di['total']),
+                )))
             # show idle text for inactive device
             elif self.format_idle:
-                text.append(self.format_idle.format(
-                    device=device_labels.get(device) or device
-                ))
+                text.append(self.py3.safe_format(self.format_idle, {
+                    'device': device_labels.get(device) or device,
+                )))
 
         # colorize output based on rate of most-active device
         color = None
@@ -184,7 +184,7 @@ class Py3status:
             'cached_until': now + self.cache_timeout,
             'color': color,
             # show idle text if no active devices
-            'full_text': self.separator.join(text) or self.format_all_idle,
+            'full_text': self.py3.composite_join(self.separation, text) or self.format_all_idle,
         }
 
 if __name__ == "__main__":

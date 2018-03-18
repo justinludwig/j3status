@@ -172,16 +172,16 @@ class Py3status:
     def j3_weather(self, i3s_output_list, i3s_config):
         weather = self._get_weather()
 
-        text = self.format.format(
-            city=weather['name'],
-            icon=self._get_icon(weather),
-            sky=weather['weather'][0]['main'],
-            temp=self._get_temp(weather),
-            humidity=weather['main']['humidity'],
-            pressure=self._get_pressure(weather),
-            wind=self._get_wind(weather),
-            direction=self._get_direction(weather)
-        )
+        text = self.py3.safe_format(self.format, {
+            'city': weather['name'],
+            'icon': self._get_icon(weather),
+            'sky': weather['weather'][0]['main'],
+            'temp': self._get_temp(weather),
+            'humidity': weather['main']['humidity'],
+            'pressure': self._get_pressure(weather),
+            'wind': self._get_wind(weather),
+            'direction': self._get_direction(weather),
+        })
 
         return {
             'cached_until': time() + self.cache_timeout,

@@ -65,7 +65,7 @@ Configuration parameters:
 - `mode` : display mode (default: 'max')
     - 'max' to display just the most-active device
     - 'all' to display all devices
-- `separator` : separator to use when displaying multiple devices (default: '|')
+- `separation` : separator to use when displaying multiple devices (default: '|')
 - `rate_format` : formatting of rate number (default: '{value:4.0f}{units}'
     - used by '{max}', '{total}', '{read}', and {'write'} totals in format parameter
     - uses units defined by rate_b/kb/mb/gb/tb parameters
@@ -108,7 +108,7 @@ Configuration parameters:
 - `mode` : display mode (default: 'max')
     - 'max' to display just the most-active interface
     - 'all' to display all interfaces
-- `separator` : separator to use when displaying multiple interfaces (default: '|')
+- `separation` : separator to use when displaying multiple interfaces (default: '|')
 - `rate_format` : formatting of rate number (default: '{value:4.0f}{units}'
     - used by '{max}', '{total}', '{up}', and {'down'} totals in format parameter
     - uses units defined by rate_b/kb/mb/gb/tb parameters
