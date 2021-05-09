@@ -35,7 +35,6 @@ class Py3status:
     rate_bad = 90
 
     # internal state
-    last_time = None
     last_stats = None
 
     def _get_stats(self):
@@ -51,13 +50,6 @@ class Py3status:
         return stats
 
     def j3_cpu(self, i3s_output_list, i3s_config):
-        # calculate the difference in seconds between last check and now
-        now = time()
-        last_time = self.last_time or now
-        self.last_time = now
-        diff_time = now - last_time
-        if diff_time < 1: diff_time = 1
-
         stats = self._get_stats()
         last_stats = self.last_stats or stats
         self.last_stats = stats
@@ -82,17 +74,17 @@ class Py3status:
 
         if self.mode == 'max':
             color_rate = max_percent
-            icon = BLOCKS[int(math.ceil(max_percent/100*len(BLOCKS))) - 1]
+            icon = BLOCKS[int(math.ceil(max_percent/100*(len(BLOCKS)-1)))]
         elif self.mode == 'avg':
             avg_percent = 100 - 100 * sum_idle / (sum_total or 1)
             color_rate = avg_percent
-            icon = BLOCKS[int(math.ceil(avg_percent/100*len(BLOCKS))) - 1]
+            icon = BLOCKS[int(math.ceil(avg_percent/100*(len(BLOCKS)-1)))]
         else:
             avg_percent = 100 - 100 * sum_idle / (sum_total or 1)
             color_rate = avg_percent
             icon = ''
             for percent in all_percent:
-                icon += BLOCKS[int(math.ceil(percent/100*len(BLOCKS))) - 1]
+                icon += BLOCKS[int(math.ceil(percent/100*(len(BLOCKS)-1)))]
 
         color = None
         if self.colorize:
@@ -104,7 +96,7 @@ class Py3status:
                 color = i3s_config['color_good']
 
         return {
-            'cached_until': now + self.cache_timeout,
+            'cached_until': time() + self.cache_timeout,
             'color': color,
             'full_text': self.format.format(icon=icon),
         }

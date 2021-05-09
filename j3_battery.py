@@ -47,7 +47,7 @@ class Py3status:
 
         icon = '⌁' # ⚡
         if ac_online < 1:
-            icon = BLOCKS[int(math.ceil(capacity/100*len(BLOCKS))) - 1]
+            icon = BLOCKS[int(math.ceil(capacity/100*(len(BLOCKS)-1)))]
         text = self.py3.safe_format(self.format, {
             'capacity': capacity,
             'icon': icon,
